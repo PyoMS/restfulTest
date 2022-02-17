@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,9 +45,9 @@ public class AdminUserController {
 		return mappingJacksonValue;
 	}
 	
-	//GET /users/1 or /users/10
-	@GetMapping("/users/{id}")
-	public MappingJacksonValue retrieveUsers(@PathVariable int id) throws UserNotFoundException{
+	//GET /adimin/users/1 -> /adimin/v1/users/1
+	@GetMapping("/v1/users/{id}")
+	public MappingJacksonValue retrieveUsersV1(@PathVariable int id) throws UserNotFoundException{
 		User user = service.findOne(id);
 		if(user==null) {
 			throw new UserNotFoundException(String.format("ID[%s] not found, ", id));
@@ -58,6 +59,28 @@ public class AdminUserController {
 		FilterProvider filterProvider = new SimpleFilterProvider().addFilter("UserInfo",filter);
 		
 		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(user);
+		mappingJacksonValue.setFilters(filterProvider);
+		
+		return mappingJacksonValue;
+	}
+	
+	@GetMapping("/v2/users/{id}")
+	public MappingJacksonValue retrieveUsersV2(@PathVariable int id) throws UserNotFoundException{
+		User user = service.findOne(id);
+		if(user==null) {
+			throw new UserNotFoundException(String.format("ID[%s] not found, ", id));
+		}
+		//User -> User2 // version 관리 
+		UserV2 userV2 = new UserV2();
+		BeanUtils.copyProperties(user, userV2); //****
+		userV2.setGrade("VIP");
+		
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.
+				filterOutAllExcept("id","name","join_date", "grade");
+		
+		FilterProvider filterProvider = new SimpleFilterProvider().addFilter("UserInfoV2",filter);
+		
+		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userV2);
 		mappingJacksonValue.setFilters(filterProvider);
 		
 		return mappingJacksonValue;

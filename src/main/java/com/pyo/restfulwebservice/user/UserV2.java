@@ -16,16 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonFilter("UserInfo")
-public class User {
-	private Integer id;
-	
-	@Size(min=2, message = "Name은 2글자 이상 입력해주세요.")
-	private String name;
-	
-	@Past
-	private Date join_date;
-	
-	private String password;
-	private String ssn;
+@JsonFilter("UserInfoV2")
+public class UserV2 extends User{ //처음 User 를 상속받으면 error -> User에 @NoArgsConstructor 어노테이션 추가 
+	private String grade;
 }
