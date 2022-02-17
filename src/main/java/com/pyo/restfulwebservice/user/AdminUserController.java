@@ -46,7 +46,10 @@ public class AdminUserController {
 	}
 	
 	//GET /adimin/users/1 -> /adimin/v1/users/1
-	@GetMapping("/v1/users/{id}")
+//	@GetMapping("/v1/users/{id}") // versioning - URI 방식 
+//	@GetMapping(value="/users/{id}/", params = "version=1") // versioning - parameter 방식
+//	@GetMapping(value="/users/{id}", headers = "X-API-VERSION=1") // versioning - header 방식
+	@GetMapping(value="/users/{id}", produces = "application/vnd.company.appv1+json") // versioning - MIME 방식
 	public MappingJacksonValue retrieveUsersV1(@PathVariable int id) throws UserNotFoundException{
 		User user = service.findOne(id);
 		if(user==null) {
@@ -64,7 +67,10 @@ public class AdminUserController {
 		return mappingJacksonValue;
 	}
 	
-	@GetMapping("/v2/users/{id}")
+//	@GetMapping("/v2/users/{id}")
+//	@GetMapping(value="/users/{id}/", params = "version=2")
+//	@GetMapping(value="/users/{id}", headers = "X-API-VERSION=2")
+	@GetMapping(value="/users/{id}", produces = "application/vnd.company.appv2+json")
 	public MappingJacksonValue retrieveUsersV2(@PathVariable int id) throws UserNotFoundException{
 		User user = service.findOne(id);
 		if(user==null) {
