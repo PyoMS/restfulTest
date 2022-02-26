@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class UserController {
 	
+	@Autowired
 	private UserDaoService service;
 	
 	public UserController(UserDaoService service) {
@@ -31,12 +35,21 @@ public class UserController {
 	
 	//GET /users/1 or /users/10
 	@GetMapping("/users/{id}")
-	public User retrieveAllUsers(@PathVariable int id) throws UserNotFoundException{
+	public EntityModel<User> retrieveAllUsers(@PathVariable int id) throws UserNotFoundException{
 		User user = service.findOne(id);
 		if(user==null) {
 			throw new UserNotFoundException(String.format("ID[%s] not found, ", id));
 		}
-		return user;
+		
+		// HATEOS
+		EntityModel<User> model = EntityModel.of(user);
+		WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(
+				WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
+		model.add(linkTo.withRel("all-users"));
+		
+		return model;
+		
+//		return user;
 	}
 	
 	@PostMapping("/users")
