@@ -7,4 +7,6 @@ spring:  messages:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+  security:    user:      name: user
+      password: qwe123
 management:  endpoints:    web:      exposure:        include: "*"
