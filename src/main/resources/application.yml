@@ -2,11 +2,16 @@ server:
   port: 8088
 
 logging:  level:    org.springframework: DEBUG
+    
 spring:  messages:
     basename: messages
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   security:    user:      name: user
-      password: qwe123
+      password: qwe123  jpa:    show-sql: true
+  datasource:    url: jdbc:h2:mem:testdb
+    
+      
 management:  endpoints:    web:      exposure:        include: "*"
+        
