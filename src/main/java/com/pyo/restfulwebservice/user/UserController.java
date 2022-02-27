@@ -21,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class UserController {
 	
-	@Autowired
+//	@Autowired
 	private UserDaoService service;
 	
 	public UserController(UserDaoService service) {

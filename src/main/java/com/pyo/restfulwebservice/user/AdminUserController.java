@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 @RequestMapping("/admin")
 public class AdminUserController {
 	
-	@Autowired
+//	@Autowired
 	private UserDaoService service;
 	
 	public AdminUserController(UserDaoService service) {this.service = service;}
