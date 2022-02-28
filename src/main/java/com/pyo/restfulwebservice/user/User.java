@@ -1,10 +1,12 @@
 package com.pyo.restfulwebservice.user;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
@@ -41,4 +43,18 @@ public class User {
 	private String password;
 	@ApiModelProperty(notes = "사용자 주민번호를 입력해 주세요.")
 	private String ssn;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Post> posts;
+
+	public User(Integer id, @Size(min = 2, message = "Name은 2글자 이상 입력해주세요.") String name, @Past Date join_date,
+			String password, String ssn) {
+		this.id = id;
+		this.name = name;
+		this.join_date = join_date;
+		this.password = password;
+		this.ssn = ssn;
+	}
+	
+	
 }
