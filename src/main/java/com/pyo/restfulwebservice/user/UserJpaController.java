@@ -26,6 +26,9 @@ public class UserJpaController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PostRepository postRepository;
+	
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers(){
 		return userRepository.findAll();
@@ -74,5 +77,25 @@ public class UserJpaController {
 			throw new UserNotFoundException(String.format("ID[%s] not found", id));
 		}
 		return user.get().getPosts(); //getPosts() -> lombok에서 getter 생성해줌.
+	}
+	
+	@PostMapping("/users/{id}/posts")
+	public ResponseEntity<Post> createPost(@PathVariable int id, @RequestBody Post post) throws UserNotFoundException{
+		//1. 사용자 정보 조회
+		Optional<User> user = userRepository.findById(id); //findById리턴값 Optional 클래스 사용.
+		if(!user.isPresent()) {
+			throw new UserNotFoundException(String.format("ID[%s] not found", id));
+		}
+		post.setUser(user.get()); // 해당 post 객체에 set User
+		
+		//2. 해당 사용자의 post list에 save
+		Post savedPost = postRepository.save(post);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("{id}")
+				.buildAndExpand(savedPost.getId())
+				.toUri();
+		
+		return ResponseEntity.created(location).build();
 	}
 }
