@@ -33,7 +33,7 @@ public class UserJpaController {
 	
 	@GetMapping("/users/{id}")
 	public EntityModel<User> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-		Optional<User> user = userRepository.findById(id);
+		Optional<User> user = userRepository.findById(id); //findById리턴값 Optional 클래스 사용.
 		
 		if(!user.isPresent()) {
 			throw new UserNotFoundException(String.format("ID[%s] not found", id));
@@ -66,4 +66,13 @@ public class UserJpaController {
 		return ResponseEntity.created(location).build();
 	}
 	
+	//개별 사용자의 게시글 조회
+	@GetMapping("/users/{id}/posts")
+	public List<Post> retrieveAllPostsByUser(@PathVariable int id) throws UserNotFoundException{
+		Optional<User> user = userRepository.findById(id); //findById리턴값 Optional 클래스 사용.
+		if(!user.isPresent()) {
+			throw new UserNotFoundException(String.format("ID[%s] not found", id));
+		}
+		return user.get().getPosts(); //getPosts() -> lombok에서 getter 생성해줌.
+	}
 }
