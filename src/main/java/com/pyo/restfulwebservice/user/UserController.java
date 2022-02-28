@@ -41,7 +41,7 @@ public class UserController {
 			throw new UserNotFoundException(String.format("ID[%s] not found, ", id));
 		}
 		
-		// HATEOS
+		// HATEOS - 전체 data 조회에 대한 주소값을 반환해 준다.
 		EntityModel<User> model = EntityModel.of(user);
 		WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(
 				WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
